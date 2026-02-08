@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>서울 재개발 초기구역 대시보드</title>
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+    <style>
+        :root {
+            --brand-gold: #A78569;
+            --brand-navy: #022136;
+            --apple-bg: #f5f5f7;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: "Pretendard Variable", Pretendard, sans-serif;
+            background-color: var(--apple-bg);
+            color: var(--brand-navy);
+            margin: 0; padding: 60px 20px;
+            display: flex; flex-direction: column; align-items: center;
+            -webkit-font-smoothing: antialiased;
+            letter-spacing: -0.02em;
+        }
+
+        header { text-align: center; margin-bottom: 60px; }
+        h1 { font-size: 42px; font-weight: 800; margin-bottom: 12px; letter-spacing: -0.05em; color: var(--brand-navy); }
+        .main-subtitle { font-size: 20px; color: var(--brand-gold); font-weight: 600; }
+        
+        /* 링크 스타일 추가 */
+        .main-subtitle a { color: var(--brand-gold); text-decoration: none; }
+        .main-subtitle a:hover { text-decoration: underline; }
+
+        .section-container { width: 100%; max-width: 1300px; margin-bottom: 60px; }
+        .section-header { 
+            font-size: 24px; font-weight: 700; margin-bottom: 30px; 
+            color: var(--brand-navy); display: flex; align-items: center;
+        }
+        .section-header::after {
+            content: ""; flex: 1; height: 1.5px; 
+            background: linear-gradient(to right, var(--brand-gold), transparent);
+            margin-left: 20px; opacity: 0.3;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 24px; width: 100%;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 28px; padding: 40px 20px; text-align: center;
+            border: 1px solid rgba(0, 0, 0, 0.03);
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            display: flex; flex-direction: column; justify-content: space-between;
+            min-height: 180px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+        }
+
+        .card:not(.disabled):hover { 
+            transform: translateY(-12px); 
+            border-color: var(--brand-gold);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.08);
+        }
+
+        .icon { font-size: 36px; margin-bottom: 18px; display: block; }
+        .card h2 { font-size: 21px; font-weight: 700; margin: 0 0 25px 0; letter-spacing: -0.03em; }
+
+        .btn {
+            cursor: pointer; width: 100%; height: 46px;
+            background-color: var(--brand-navy); color: white;
+            border: none; border-radius: 14px; font-size: 15px; font-weight: 600;
+            transition: 0.3s;
+        }
+        .btn:hover { background-color: var(--brand-gold); transform: scale(1.02); }
+        
+        .btn-disabled { 
+            background-color: #f2f2f7; color: #aeaeae; 
+            cursor: not-allowed; font-weight: 500;
+        }
+
+        @media (max-width: 1024px) {
+            .grid { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        @media (max-width: 600px) {
+            .grid { grid-template-columns: repeat(2, 1fr); gap: 15px; }
+            h1 { font-size: 32px; }
+            .card { padding: 30px 10px; min-height: 160px; }
+            .card h2 { font-size: 18px; margin-bottom: 15px; }
+            .icon { font-size: 30px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>서울 재개발 초기구역</h1>
+        <div class="main-subtitle">번호부여 현황 확인 <a href="https://blog.naver.com/chachalacha" target="_blank">(by 수잔)</a></div>
+    </header>
+
+    <div class="section-container">
+        <div class="section-header">강북 지역</div>
+        <div id="northGrid" class="grid"></div>
+    </div>
+
+    <div class="section-container">
+        <div class="section-header">강남 지역</div>
+        <div id="southGrid" class="grid"></div>
+    </div>
+
+    <form id="nowonForm" action="https://www.nowon.kr/www/user/bbs/BD_selectBbsList.do" method="POST" target="popupWin" style="display:none;">
+        <input type="hidden" name="q_bbsCode" value="1004"><input type="hidden" name="q_searchKeyTy" value="sj___1002"><input type="hidden" name="q_searchVal" value="동의서 번호부여">
+    </form>
+    <form id="yongsanForm" action="https://www.yongsan.go.kr/portal/bbs/B0000170/list.do" method="GET" target="popupWin" style="display:none;">
+        <input type="hidden" name="menuNo" value="200848"><input type="hidden" name="deptId" value="3020154"><input type="hidden" name="searchCnd" value="1"><input type="hidden" name="searchWrd" value="동의서">
+    </form>
+
+    <script>
+        const north = [
+            { name: "강북구", icon: "🏛️", url: "https://www.gangbuk.go.kr/portal/bbs/B0000035/list.do?menuNo=200607" },
+            { name: "광진구", icon: "🏘️", url: "https://www.gwangjin.go.kr/portal/bbs/B0000001/list.do?menuNo=200190&searchCnd=1&searchWrd=%EB%8F%99%EC%9D%98%EC%84%9C+%EB%B2%88%ED%98%B8%EB%B6%80%EC%97%AC" },
+            { name: "노원구", icon: "🌳", url: "NOWON_POST" },
+            { name: "도봉구", icon: "🏔️", url: "https://www.dobong.go.kr/WDB_common/search_new/search.asp?category=BBS&kwd=%EB%8F%99%EC%9D%98%EC%84%9C+%EB%B2%88%ED%98%B8%EB%B6%80%EC%97%AC" },
+            { name: "동대문구", icon: "🍎", url: "https://www.ddm.go.kr/www/selectBbsNttList.do?key=198&bbsNo=38&searchKrwd=%EB%8F%99%EC%9D%98%EC%84%9C+%EB%B2%88%ED%98%B8%EB%B6%80%EC%97%AC" },
+            { name: "마포구", icon: "🌉", url: "https://www.mapo.go.kr/site/main/board/notice/list?sv=%EB%8F%99%EC%9D%98%EC%84%9C+%EB%B2%88%ED%98%B8%EB%B6%80%EC%97%AC" },
+            { name: "서대문구", icon: "🏫", url: "https://www.sdm.go.kr/city/redev/business.do" },
+            { name: "성동구", icon: "💎", url: "https://www.sd.go.kr/main/selectBbsNttList.do?key=1307&bbsNo=166&searchKrwd=%EB%8F%99%EC%9D%98%EC%84%9C+%EB%B2%88%ED%98%B8%EB%B6%80%EC%97%AC" },
+            { name: "성북구", icon: "📚", url: "https://www.sb.go.kr/www/selectBbsNttList.do?key=6350&bbsNo=41&searchKrwd=%EB%8F%99%EC%9D%98%EC%84%9C+%EB%B2%88%ED%98%B8%EB%B6%80%EC%97%AC" },
+            { name: "용산구", icon: "🚉", url: "YONGSAN_POST" },
+            { name: "은평구", icon: "🌋", url: "https://www.ep.go.kr/www/selectBbsNttList.do?key=1063&bbsNo=63&searchKrwd=%EB%8F%99%EC%9D%98%EC%84%9C+%EB%B2%88%ED%98%B8%EB%B6%80%EC%97%AC" },
+            { name: "종로구", icon: "🏯", url: "https://www.jongno.go.kr/portal/bbs/B0000002/list.do?menuNo=200052" },
+            { name: "중구", icon: "🏙️", url: "https://www.junggu.seoul.kr/content.do?cmsid=14231" },
+            { name: "중랑구", icon: "🌹", url: "https://www.jungnang.go.kr/dong/bbs/list/B0000002.do?menuNo=500012&dong=01" }
+        ].sort((a, b) => a.name.localeCompare(b.name, 'ko'));
+
+        const south = [
+            { name: "강남구", icon: "🏙️" }, { name: "강동구", icon: "☀️" }, { name: "강서구", icon: "✈️" }, { name: "관악구", icon: "⛰️" }, { name: "구로구", icon: "⚙️" }, { name: "금천구", icon: "👔" }, { name: "동작구", icon: "🎓" }, { name: "서초구", icon: "⚖️" }, { name: "송파구", icon: "🏰" }, { name: "양천구", icon: "🌳" }, { name: "영등포구", icon: "🏢" }
+        ].sort((a, b) => a.name.localeCompare(b.name, 'ko'));
+
+        function draw(target, list, dis = false) {
+            const el = document.getElementById(target);
+            list.forEach(d => {
+                const c = document.createElement('div');
+                c.className = dis ? 'card disabled' : 'card';
+                let b = dis ? `<button class="btn btn-disabled">추후 업데이트</button>` : `<button class="btn" onclick="go('${d.url}')">현황 확인</button>`;
+                c.innerHTML = `<span class="icon">${d.icon}</span><h2>${d.name}</h2>${b}`;
+                el.appendChild(c);
+            });
+        }
+
+        function go(u) {
+            const f = "width=1300,height=900,resizable=yes,scrollbars=yes";
+            if (u === 'NOWON_POST') { window.open('', 'pWin', f); document.getElementById('nowonForm').submit(); }
+            else if (u === 'YONGSAN_POST') { window.open('', 'pWin', f); document.getElementById('yongsanForm').submit(); }
+            else { window.open(u, '_blank', f); }
+        }
+
+        draw('northGrid', north);
+        draw('southGrid', south, true);
+    </script>
+</body>
+</html>
