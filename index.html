@@ -24,15 +24,17 @@
         .notice-title { flex: 1; font-weight: 600; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .notice-date { color: #999; font-size: 13px; margin-left: 15px; }
         .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 24px; width: 100%; }
-        .card { background: var(--card-bg); border-radius: 28px; padding: 40px 20px; text-align: center; border: 1px solid rgba(0, 0, 0, 0.03); display: flex; flex-direction: column; justify-content: space-between; min-height: 180px; transition: 0.3s; }
-        .card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.08); }
+        .card { background: linear-gradient(135deg, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.6) 100%); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-radius: 28px; padding: 40px 20px; text-align: center; border: 1px solid rgba(167, 133, 105, 0.12); display: flex; flex-direction: column; justify-content: space-between; min-height: 180px; transition: 0.3s; box-shadow: 0 4px 20px rgba(0,0,0,0.03); }
+        .card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(167, 133, 105, 0.12); border-color: rgba(167, 133, 105, 0.25); }
         .icon { font-size: 36px; margin-bottom: 18px; }
         .btn { cursor: pointer; width: 100%; height: 46px; background-color: var(--brand-navy); color: white; border: none; border-radius: 14px; font-weight: 600; transition: 0.2s; }
         .btn:hover { background-color: var(--brand-gold); }
-        footer { width: 100%; max-width: 1300px; background-color: var(--ad-bg); border-radius: 30px; padding: 40px 20px; margin-top: 40px; text-align: center; box-sizing: border-box; }
-        .ad-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 40px; }
-        .ad-item { text-decoration: none; color: inherit; }
-        .ad-content { font-size: 18px; font-weight: 700; color: var(--brand-navy); }
+        footer { width: 100%; max-width: 1300px; background: linear-gradient(135deg, rgba(255,255,255,0.7) 0%, rgba(236,236,237,0.5) 100%); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-radius: 30px; padding: 44px 32px; margin-top: 40px; margin-bottom: 40px; text-align: center; box-sizing: border-box; border: 1px solid rgba(167, 133, 105, 0.1); box-shadow: 0 4px 20px rgba(0,0,0,0.02); }
+        .ad-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; }
+        .ad-item { text-decoration: none; color: inherit; padding: 16px 28px; border-radius: 16px; transition: 0.2s; border: 1px solid transparent; }
+        .ad-item:hover { background: rgba(167, 133, 105, 0.06); border-color: rgba(167, 133, 105, 0.15); }
+        .ad-label { font-size: 13px; color: #888; margin-bottom: 5px; letter-spacing: 0.02em; }
+        .ad-content { font-size: 17px; font-weight: 700; color: var(--brand-navy); }
         @media (max-width: 1024px) { .grid { grid-template-columns: repeat(3, 1fr); } }
         @media (max-width: 600px) {
             body { padding: 30px 14px 0 14px; }
@@ -52,9 +54,11 @@
             .card h2 { font-size: 16px; margin: 8px 0; }
             .icon { font-size: 28px; margin-bottom: 10px; }
             .btn { height: 40px; font-size: 13px; border-radius: 11px; }
-            footer { border-radius: 20px; padding: 28px 16px; margin-top: 24px; }
-            .ad-container { gap: 24px; }
-            .ad-content { font-size: 15px; }
+            footer { border-radius: 20px; padding: 24px 12px; margin-top: 24px; margin-bottom: 24px; }
+            .ad-container { gap: 8px; }
+            .ad-item { padding: 12px 16px; border-radius: 12px; }
+            .ad-label { font-size: 12px; }
+            .ad-content { font-size: 14px; }
         }
     </style>
 </head>
@@ -84,15 +88,15 @@
     <footer>
         <div class="ad-container">
             <a href="https://blog.naver.com/chachalacha" target="_blank" class="ad-item">
-                <div style="font-size:14px; color:#666;">기획 및 제작</div>
+                <div class="ad-label">기획 및 제작</div>
                 <div class="ad-content">수잔의 블로그</div>
             </a>
             <a href="https://blog.naver.com/po-tax/222638285211" target="_blank" class="ad-item">
-                <div style="font-size:14px; color:#666;">재개발 전문 세무상담</div>
+                <div class="ad-label">재개발 전문 세무상담</div>
                 <div class="ad-content">⚖️ 세무회계 평온</div>
             </a>
             <a href="https://contents.premium.naver.com/jejeguide/jejemvp" target="_blank" class="ad-item">
-                <div style="font-size:14px; color:#666;">프리미엄 매물 분석</div>
+                <div class="ad-label">프리미엄 매물 분석</div>
                 <div class="ad-content">📈 재개발 재건축 추천매물 스터디</div>
             </a>
         </div>
