@@ -27,7 +27,7 @@
         .card { background: var(--card-bg); border-radius: 28px; padding: 40px 20px; text-align: center; border: 1px solid rgba(0, 0, 0, 0.03); display: flex; flex-direction: column; justify-content: space-between; min-height: 180px; transition: 0.3s; }
         .card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.08); }
         .icon { font-size: 36px; margin-bottom: 18px; }
-        .btn { cursor: pointer; width: 100%; height: 46px; background-color: var(--brand-navy); color: white; border: none; border-radius: 14px; font-weight: 600; }
+        .btn { cursor: pointer; width: 100%; height: 46px; background-color: var(--brand-navy); color: white; border: none; border-radius: 14px; font-weight: 600; transition: 0.2s; }
         .btn:hover { background-color: var(--brand-gold); }
         footer { width: 100%; max-width: 1300px; background-color: var(--ad-bg); border-radius: 30px; padding: 40px 20px; margin-top: 40px; text-align: center; box-sizing: border-box; }
         .ad-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 40px; }
@@ -38,7 +38,6 @@
     </style>
 </head>
 <body>
-
     <header>
         <h1>서울 재개발 초기구역</h1>
         <div class="main-subtitle">번호부여 현황 확인 <a href="https://blog.naver.com/chachalacha" target="_blank">(by 수잔)</a></div>
@@ -64,62 +63,104 @@
     <footer>
         <div class="ad-container">
             <a href="https://blog.naver.com/chachalacha" target="_blank" class="ad-item">
-                <div class="ad-title" style="font-size:14px; color:#666;">기획 및 제작</div>
+                <div style="font-size:14px; color:#666;">기획 및 제작</div>
                 <div class="ad-content">수잔의 블로그</div>
             </a>
             <a href="https://blog.naver.com/po-tax/222638285211" target="_blank" class="ad-item">
-                <div class="ad-title" style="font-size:14px; color:#666;">재개발 전문 세무상담</div>
+                <div style="font-size:14px; color:#666;">재개발 전문 세무상담</div>
                 <div class="ad-content">⚖️ 세무회계 평온</div>
             </a>
             <a href="https://contents.premium.naver.com/jejeguide/jejemvp" target="_blank" class="ad-item">
-                <div class="ad-title" style="font-size:14px; color:#666;">프리미엄 매물 분석</div>
+                <div style="font-size:14px; color:#666;">프리미엄 매물 분석</div>
                 <div class="ad-content">📈 재개발 재건축 추천매물 스터디</div>
             </a>
         </div>
     </footer>
 
     <script>
-        const S_ID = '1vT8h7-kWC_LvQiqKiTjjislCUrL3aZrxJcCKmDEd64qT47CLTc34fbIHqu1tGtEH7aB_e6vsFgxc2_9';
-        const JSON_URL = `https://docs.google.com/spreadsheets/d/${S_ID}/gviz/tq?tqx=out:json`;
+        // Google Sheets gviz 엔드포인트
+        const SHEET_ID = '1SUHqOamFuM-g20UbaGIzMp2mpFsWNBJ4gLse1ZfSMyI';
 
-        async function loadSheetData() {
+        function renderNotices(data) {
             const container = document.getElementById('sheet-notices');
-            try {
-                const response = await fetch(JSON_URL);
-                const text = await response.text();
-                // 구글 JSON 특유의 보안 문구 제거 후 파싱
-                const json = JSON.parse(text.substring(47).slice(0, -2));
-                const rows = json.table.rows;
+            const rows = data.table.rows;
 
-                if (rows.length === 0) {
-                    container.innerHTML = '<p style="padding:20px; text-align:center; color:#999;">등록된 데이터가 없습니다.</p>';
-                    return;
-                }
-
-                container.innerHTML = '';
-                rows.forEach(row => {
-                    const c = row.c;
-                    const badge = c[0] ? c[0].v : 'NEW';
-                    const tag = c[1] ? c[1].v : '서울';
-                    const title = c[2] ? c[2].v : '제목 없음';
-                    const link = c[3] ? c[3].v : '#';
-                    const date = c[4] ? (c[4].f || c[4].v) : '';
-
-                    const html = `
-                        <a href="${link}" target="_blank" class="notice-item">
-                            <span class="badge">${badge}</span>
-                            <span class="notice-tag">${tag}</span>
-                            <span class="notice-title">${title}</span>
-                            <span class="notice-date">${date}</span>
-                        </a>`;
-                    container.innerHTML += html;
-                });
-            } catch (e) {
-                console.error(e);
-                container.innerHTML = '<p style="padding:20px; text-align:center;">데이터를 불러오는 중입니다. 잠시만 기다려주세요.</p>';
-                // 실패 시 2초 뒤 재시도
-                setTimeout(loadSheetData, 2000);
+            if (!rows || rows.length === 0) {
+                container.innerHTML = '<p style="padding:20px; text-align:center; color:#999;">등록된 데이터가 없습니다.</p>';
+                return;
             }
+
+            container.innerHTML = '';
+            rows.forEach(row => {
+                const c = row.c;
+                if (!c || c.length < 4) return;
+
+                const badge = c[0] ? c[0].v : 'NEW';
+                const tag   = c[1] ? c[1].v : '서울';
+                const title = c[2] ? c[2].v : '제목 없음';
+                const link  = c[3] ? c[3].v : '#';
+                const date  = c[4] ? (c[4].f || c[4].v) : '';
+
+                if (!title || link === '#') return;
+
+                container.innerHTML += `
+                    <a href="${link}" target="_blank" class="notice-item">
+                        <span class="badge">${badge}</span>
+                        <span class="notice-tag">${tag}</span>
+                        <span class="notice-title">${title}</span>
+                        <span class="notice-date">${date}</span>
+                    </a>`;
+            });
+        }
+
+        function loadSheetData() {
+            const container = document.getElementById('sheet-notices');
+            const gvizUrl = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=0`;
+
+            // 방법 1: fetch 시도
+            fetch(gvizUrl)
+                .then(res => {
+                    if (!res.ok) throw new Error('HTTP ' + res.status);
+                    return res.text();
+                })
+                .then(text => {
+                    const match = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]+?)\);?\s*$/);
+                    if (!match) throw new Error('응답 형식 오류');
+                    renderNotices(JSON.parse(match[1]));
+                })
+                .catch(err => {
+                    console.warn('[fetch 실패, JSONP로 재시도]', err.message);
+                    loadViaJSONP();
+                });
+        }
+
+        // 방법 2: JSONP (script 태그) - CORS 완전 우회
+        function loadViaJSONP() {
+            const container = document.getElementById('sheet-notices');
+            const callbackName = 'sheetCallback_' + Date.now();
+
+            window[callbackName] = function(data) {
+                try {
+                    renderNotices(data);
+                } catch (e) {
+                    console.error('[JSONP 파싱 에러]', e);
+                    container.innerHTML = '<p style="padding:20px; text-align:center;">데이터를 불러오는 중입니다. 잠시만 기다려주세요.</p>';
+                    setTimeout(loadSheetData, 2000);
+                }
+                delete window[callbackName];
+                document.getElementById('jsonp-script')?.remove();
+            };
+
+            const script = document.createElement('script');
+            script.id = 'jsonp-script';
+            script.src = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=responseHandler:${callbackName}&gid=0`;
+            script.onerror = function() {
+                console.error('[JSONP 로딩 실패]');
+                container.innerHTML = '<p style="padding:20px; text-align:center;">데이터를 불러오는 중입니다. 잠시만 기다려주세요.</p>';
+                delete window[callbackName];
+                setTimeout(loadSheetData, 2000);
+            };
+            document.body.appendChild(script);
         }
 
         const north = [
