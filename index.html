@@ -6,91 +6,35 @@
     <title>서울 재개발 초기구역 대시보드</title>
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
     <style>
-        :root {
-            --brand-gold: #A78569;
-            --brand-navy: #022136;
-            --apple-bg: #f5f5f7;
-            --card-bg: #ffffff;
-        }
-
-        body {
-            font-family: "Pretendard Variable", Pretendard, sans-serif;
-            background-color: var(--apple-bg);
-            color: var(--brand-navy);
-            margin: 0; padding: 60px 20px;
-            display: flex; flex-direction: column; align-items: center;
-            -webkit-font-smoothing: antialiased;
-            letter-spacing: -0.02em;
-        }
-
+        :root { --brand-gold: #A78569; --brand-navy: #022136; --apple-bg: #f5f5f7; --card-bg: #ffffff; --ad-bg: #ececed; --accent-red: #d93025; }
+        body { font-family: "Pretendard Variable", sans-serif; background-color: var(--apple-bg); color: var(--brand-navy); margin: 0; padding: 60px 20px 0 20px; display: flex; flex-direction: column; align-items: center; -webkit-font-smoothing: antialiased; letter-spacing: -0.02em; }
         header { text-align: center; margin-bottom: 60px; }
-        h1 { font-size: 42px; font-weight: 800; margin-bottom: 12px; letter-spacing: -0.05em; color: var(--brand-navy); }
+        h1 { font-size: 42px; font-weight: 800; margin-bottom: 12px; color: var(--brand-navy); }
         .main-subtitle { font-size: 20px; color: var(--brand-gold); font-weight: 600; }
-        
-        /* 링크 스타일 추가 */
         .main-subtitle a { color: var(--brand-gold); text-decoration: none; }
-        .main-subtitle a:hover { text-decoration: underline; }
-
         .section-container { width: 100%; max-width: 1300px; margin-bottom: 60px; }
-        .section-header { 
-            font-size: 24px; font-weight: 700; margin-bottom: 30px; 
-            color: var(--brand-navy); display: flex; align-items: center;
-        }
-        .section-header::after {
-            content: ""; flex: 1; height: 1.5px; 
-            background: linear-gradient(to right, var(--brand-gold), transparent);
-            margin-left: 20px; opacity: 0.3;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 24px; width: 100%;
-        }
-
-        .card {
-            background: var(--card-bg);
-            border-radius: 28px; padding: 40px 20px; text-align: center;
-            border: 1px solid rgba(0, 0, 0, 0.03);
-            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-            display: flex; flex-direction: column; justify-content: space-between;
-            min-height: 180px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
-        }
-
-        .card:not(.disabled):hover { 
-            transform: translateY(-12px); 
-            border-color: var(--brand-gold);
-            box-shadow: 0 25px 50px rgba(0,0,0,0.08);
-        }
-
-        .icon { font-size: 36px; margin-bottom: 18px; display: block; }
-        .card h2 { font-size: 21px; font-weight: 700; margin: 0 0 25px 0; letter-spacing: -0.03em; }
-
-        .btn {
-            cursor: pointer; width: 100%; height: 46px;
-            background-color: var(--brand-navy); color: white;
-            border: none; border-radius: 14px; font-size: 15px; font-weight: 600;
-            transition: 0.3s;
-        }
-        .btn:hover { background-color: var(--brand-gold); transform: scale(1.02); }
-        
-        .btn-disabled { 
-            background-color: #f2f2f7; color: #aeaeae; 
-            cursor: not-allowed; font-weight: 500;
-        }
-
-        @media (max-width: 1024px) {
-            .grid { grid-template-columns: repeat(3, 1fr); }
-        }
-
-        @media (max-width: 600px) {
-            .grid { grid-template-columns: repeat(2, 1fr); gap: 15px; }
-            h1 { font-size: 32px; }
-            .card { padding: 30px 10px; min-height: 160px; }
-            .card h2 { font-size: 18px; margin-bottom: 15px; }
-            .icon { font-size: 30px; }
-        }
+        .section-header { font-size: 24px; font-weight: 700; margin-bottom: 30px; color: var(--brand-navy); display: flex; align-items: center; }
+        .section-header::after { content: ""; flex: 1; height: 1.5px; background: linear-gradient(to right, var(--brand-gold), transparent); margin-left: 20px; opacity: 0.3; }
+        .notice-board { width: 100%; background: var(--card-bg); border-radius: 24px; padding: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); margin-bottom: 20px; border: 1px solid rgba(167, 133, 105, 0.2); overflow: hidden; }
+        .notice-item { display: flex; align-items: center; padding: 15px; border-bottom: 1px solid #f0f0f0; text-decoration: none; color: inherit; transition: 0.2s; }
+        .notice-item:last-child { border-bottom: none; }
+        .notice-item:hover { background-color: #fcfaf8; }
+        .badge { background: var(--accent-red); color: white; font-size: 11px; padding: 3px 8px; border-radius: 50px; margin-right: 12px; font-weight: 700; }
+        .notice-tag { color: var(--brand-gold); font-weight: 700; font-size: 14px; margin-right: 15px; min-width: 60px; }
+        .notice-title { flex: 1; font-weight: 600; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .notice-date { color: #999; font-size: 13px; margin-left: 15px; }
+        .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 24px; width: 100%; }
+        .card { background: var(--card-bg); border-radius: 28px; padding: 40px 20px; text-align: center; border: 1px solid rgba(0, 0, 0, 0.03); display: flex; flex-direction: column; justify-content: space-between; min-height: 180px; transition: 0.3s; }
+        .card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.08); }
+        .icon { font-size: 36px; margin-bottom: 18px; }
+        .btn { cursor: pointer; width: 100%; height: 46px; background-color: var(--brand-navy); color: white; border: none; border-radius: 14px; font-weight: 600; }
+        .btn:hover { background-color: var(--brand-gold); }
+        footer { width: 100%; max-width: 1300px; background-color: var(--ad-bg); border-radius: 30px; padding: 40px 20px; margin-top: 40px; text-align: center; box-sizing: border-box; }
+        .ad-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 40px; }
+        .ad-item { text-decoration: none; color: inherit; }
+        .ad-content { font-size: 18px; font-weight: 700; color: var(--brand-navy); }
+        @media (max-width: 1024px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 600px) { .grid { grid-template-columns: repeat(2, 1fr); gap: 15px; } .notice-tag { display: none; } }
     </style>
 </head>
 <body>
@@ -101,64 +45,128 @@
     </header>
 
     <div class="section-container">
-        <div class="section-header">강북 지역</div>
+        <div class="section-header">🔥 최근 번호부여 업데이트 (실시간)</div>
+        <div class="notice-board" id="sheet-notices">
+            <p style="text-align:center; padding:20px; color:#999;">데이터를 가져오는 중입니다...</p>
+        </div>
+    </div>
+
+    <div class="section-container">
+        <div class="section-header">강북 지역 (14개 구)</div>
         <div id="northGrid" class="grid"></div>
     </div>
 
     <div class="section-container">
-        <div class="section-header">강남 지역</div>
+        <div class="section-header">강남 지역 (11개 구)</div>
         <div id="southGrid" class="grid"></div>
     </div>
 
-    <form id="nowonForm" action="https://www.nowon.kr/www/user/bbs/BD_selectBbsList.do" method="POST" target="popupWin" style="display:none;">
-        <input type="hidden" name="q_bbsCode" value="1004"><input type="hidden" name="q_searchKeyTy" value="sj___1002"><input type="hidden" name="q_searchVal" value="동의서 번호부여">
-    </form>
-    <form id="yongsanForm" action="https://www.yongsan.go.kr/portal/bbs/B0000170/list.do" method="GET" target="popupWin" style="display:none;">
-        <input type="hidden" name="menuNo" value="200848"><input type="hidden" name="deptId" value="3020154"><input type="hidden" name="searchCnd" value="1"><input type="hidden" name="searchWrd" value="동의서">
-    </form>
+    <footer>
+        <div class="ad-container">
+            <a href="https://blog.naver.com/chachalacha" target="_blank" class="ad-item">
+                <div class="ad-title" style="font-size:14px; color:#666;">기획 및 제작</div>
+                <div class="ad-content">수잔의 블로그</div>
+            </a>
+            <a href="https://blog.naver.com/po-tax/222638285211" target="_blank" class="ad-item">
+                <div class="ad-title" style="font-size:14px; color:#666;">재개발 전문 세무상담</div>
+                <div class="ad-content">⚖️ 세무회계 평온</div>
+            </a>
+            <a href="https://contents.premium.naver.com/jejeguide/jejemvp" target="_blank" class="ad-item">
+                <div class="ad-title" style="font-size:14px; color:#666;">프리미엄 매물 분석</div>
+                <div class="ad-content">📈 재개발 재건축 추천매물 스터디</div>
+            </a>
+        </div>
+    </footer>
 
     <script>
+        const S_ID = '1vT8h7-kWC_LvQiqKiTjjislCUrL3aZrxJcCKmDEd64qT47CLTc34fbIHqu1tGtEH7aB_e6vsFgxc2_9';
+        const JSON_URL = `https://docs.google.com/spreadsheets/d/${S_ID}/gviz/tq?tqx=out:json`;
+
+        async function loadSheetData() {
+            const container = document.getElementById('sheet-notices');
+            try {
+                const response = await fetch(JSON_URL);
+                const text = await response.text();
+                // 구글 JSON 특유의 보안 문구 제거 후 파싱
+                const json = JSON.parse(text.substring(47).slice(0, -2));
+                const rows = json.table.rows;
+
+                if (rows.length === 0) {
+                    container.innerHTML = '<p style="padding:20px; text-align:center; color:#999;">등록된 데이터가 없습니다.</p>';
+                    return;
+                }
+
+                container.innerHTML = '';
+                rows.forEach(row => {
+                    const c = row.c;
+                    const badge = c[0] ? c[0].v : 'NEW';
+                    const tag = c[1] ? c[1].v : '서울';
+                    const title = c[2] ? c[2].v : '제목 없음';
+                    const link = c[3] ? c[3].v : '#';
+                    const date = c[4] ? (c[4].f || c[4].v) : '';
+
+                    const html = `
+                        <a href="${link}" target="_blank" class="notice-item">
+                            <span class="badge">${badge}</span>
+                            <span class="notice-tag">${tag}</span>
+                            <span class="notice-title">${title}</span>
+                            <span class="notice-date">${date}</span>
+                        </a>`;
+                    container.innerHTML += html;
+                });
+            } catch (e) {
+                console.error(e);
+                container.innerHTML = '<p style="padding:20px; text-align:center;">데이터를 불러오는 중입니다. 잠시만 기다려주세요.</p>';
+                // 실패 시 2초 뒤 재시도
+                setTimeout(loadSheetData, 2000);
+            }
+        }
+
         const north = [
             { name: "강북구", icon: "🏛️", url: "https://www.gangbuk.go.kr/portal/bbs/B0000035/list.do?menuNo=200607" },
-            { name: "광진구", icon: "🏘️", url: "https://www.gwangjin.go.kr/portal/bbs/B0000001/list.do?menuNo=200190&searchCnd=1&searchWrd=%EB%8F%99%EC%9D%98%EC%84%9C+%EB%B2%88%ED%98%B8%EB%B6%80%EC%97%AC" },
-            { name: "노원구", icon: "🌳", url: "NOWON_POST" },
-            { name: "도봉구", icon: "🏔️", url: "https://www.dobong.go.kr/WDB_common/search_new/search.asp?category=BBS&kwd=%EB%8F%99%EC%9D%98%EC%84%9C+%EB%B2%88%ED%98%B8%EB%B6%80%EC%97%AC" },
-            { name: "동대문구", icon: "🍎", url: "https://www.ddm.go.kr/www/selectBbsNttList.do?key=198&bbsNo=38&searchKrwd=%EB%8F%99%EC%9D%98%EC%84%9C+%EB%B2%88%ED%98%B8%EB%B6%80%EC%97%AC" },
+            { name: "광진구", icon: "🏘️", url: "https://www.gwangjin.go.kr/portal/bbs/B0000001/list.do?pageIndex=1&menuNo=200190&searchCnd=1&searchWrd=%EB%8F%99%EC%9D%98%EC%84%9C+%EB%B2%88%ED%98%B8%EB%B6%80%EC%97%AC" },
+            { name: "노원구", icon: "🌳", url: "https://www.nowon.kr/www/user/bbs/BD_selectBbsList.do?q_bbsCode=1004&q_searchKeyTy=sj___1002&q_searchVal=%EB%8F%99%EC%9D%98%EC%84%9C+%EB%B2%88%ED%98%B8%EB%B6%80%EC%97%AC" },
+            { name: "도봉구", icon: "🏔️", url: "https://www.dobong.go.kr/WDB_common/search_new/search.asp?category=BBS&kwd=%EB%8F%99%EC%9D%98%EC%84%9C+%EB%B2%88%ED%98%B8%EB%B6%80%EC%97%AC+%EC%9A%94%EC%B2%AD" },
+            { name: "동대문구", icon: "🍎", url: "https://www.ddm.go.kr/www/selectBbsNttList.do?key=198&bbsNo=38&searchCnd=SJ&searchKrwd=%EB%8F%99%EC%9D%98%EC%84%9C+%EB%B2%88%ED%98%B8%EB%B6%80%EC%97%AC" },
             { name: "마포구", icon: "🌉", url: "https://www.mapo.go.kr/site/main/board/notice/list?sv=%EB%8F%99%EC%9D%98%EC%84%9C+%EB%B2%88%ED%98%B8%EB%B6%80%EC%97%AC" },
             { name: "서대문구", icon: "🏫", url: "https://www.sdm.go.kr/city/redev/business.do" },
-            { name: "성동구", icon: "💎", url: "https://www.sd.go.kr/main/selectBbsNttList.do?key=1307&bbsNo=166&searchKrwd=%EB%8F%99%EC%9D%98%EC%84%9C+%EB%B2%88%ED%98%B8%EB%B6%80%EC%97%AC" },
-            { name: "성북구", icon: "📚", url: "https://www.sb.go.kr/www/selectBbsNttList.do?key=6350&bbsNo=41&searchKrwd=%EB%8F%99%EC%9D%98%EC%84%9C+%EB%B2%88%ED%98%B8%EB%B6%80%EC%97%AC" },
-            { name: "용산구", icon: "🚉", url: "YONGSAN_POST" },
-            { name: "은평구", icon: "🌋", url: "https://www.ep.go.kr/www/selectBbsNttList.do?key=1063&bbsNo=63&searchKrwd=%EB%8F%99%EC%9D%98%EC%84%9C+%EB%B2%88%ED%98%B8%EB%B6%80%EC%97%AC" },
-            { name: "종로구", icon: "🏯", url: "https://www.jongno.go.kr/portal/bbs/B0000002/list.do?menuNo=200052" },
-            { name: "중구", icon: "🏙️", url: "https://www.junggu.seoul.kr/content.do?cmsid=14231" },
+            { name: "성동구", icon: "💎", url: "https://www.sd.go.kr/main/selectBbsNttList.do?key=1307&bbsNo=166&searchCnd=SJ&searchKrwd=%EB%8F%99%EC%9D%98%EC%84%9C+%EB%B2%88%ED%98%B8%EB%B6%80%EC%97%AC" },
+            { name: "성북구", icon: "📚", url: "https://www.sb.go.kr/www/selectBbsNttList.do?key=6350&bbsNo=41&searchCnd=SJ&searchKrwd=%EB%8F%99%EC%9D%98%EC%84%9C+%EB%B2%88%ED%98%B8%EB%B6%80%EC%97%AC" },
+            { name: "용산구", icon: "🚉", url: "https://www.yongsan.go.kr/portal/bbs/B0000170/list.do?menuNo=200848&searchCnd=1&searchWrd=%EB%8F%99%EC%9D%98%EC%84%9C" },
+            { name: "은평구", icon: "🌋", url: "https://www.ep.go.kr/www/selectBbsNttList.do?key=1063&bbsNo=63&searchCnd=SJ&searchKrwd=%EB%8F%99%EC%9D%98%EC%84%9C+%EB%B2%88%ED%98%B8%EB%B6%80%EC%97%AC" },
+            { name: "종로구", icon: "🏯", url: "https://www.jongno.go.kr/cmm/search/searchEngine.do", isManual: true },
+            { name: "중구", icon: "🏙️", url: "https://www.junggu.seoul.kr/content.do?cmsid=14231", isManual: true },
             { name: "중랑구", icon: "🌹", url: "https://www.jungnang.go.kr/dong/bbs/list/B0000002.do?menuNo=500012&dong=01" }
         ].sort((a, b) => a.name.localeCompare(b.name, 'ko'));
 
         const south = [
-            { name: "강남구", icon: "🏙️" }, { name: "강동구", icon: "☀️" }, { name: "강서구", icon: "✈️" }, { name: "관악구", icon: "⛰️" }, { name: "구로구", icon: "⚙️" }, { name: "금천구", icon: "👔" }, { name: "동작구", icon: "🎓" }, { name: "서초구", icon: "⚖️" }, { name: "송파구", icon: "🏰" }, { name: "양천구", icon: "🌳" }, { name: "영등포구", icon: "🏢" }
+            { name: "강남구", icon: "🏙️", url: "https://www.gangnam.go.kr/board/union6/list.do?keyfield=bdm_main_title&keyword=%EB%8F%99%EC%9D%98%EC%84%9C" },
+            { name: "강동구", icon: "☀️", url: "https://www.gangdong.go.kr/web/newportal/bbs/b_111/list?sv=%EB%8F%99%EC%9D%98%EC%84%9C" },
+            { name: "강서구", icon: "✈️", url: "https://www.gangseo.seoul.kr/gs040101", isManual: true },
+            { name: "관악구", icon: "⛰️", url: "https://www.gwanak.go.kr/site/gwanak/ex/bbsNew/List.do?typeCode=1", isManual: true },
+            { name: "구로구", icon: "⚙️", url: "https://www.guro.go.kr/www/selectBbsNttList.do?key=1790&bbsNo=662&searchCnd=SJ&searchKrwd=%EB%8F%99%EC%9D%98%EC%84%9C+%EB%B2%88%ED%98%B8%EB%B6%80%EC%97%AC" },
+            { name: "금천구", icon: "👔", url: "https://www.geumcheon.go.kr/portal/selectBbsNttList.do?key=4299&bbsNo=150604&searchCnd=SJ&searchKrwd=%EB%8F%99%EC%9D%98%EC%84%9C+%EB%B2%88%ED%98%B8%EB%B6%80%EC%97%AC" },
+            { name: "동작구", icon: "🎓", url: "https://www.dongjak.go.kr/search.do", isManual: true },
+            { name: "서초구", icon: "⚖️", url: "https://www.seocho.go.kr/site/seocho/ex/bbs/List.do?cbIdx=57" },
+            { name: "송파구", icon: "🏰", url: "https://www.songpa.go.kr/search/search_page.jsp", isManual: true },
+            { name: "양천구", icon: "🌳", url: "https://www.yangcheon.go.kr/site/search/main.jsp", isManual: true },
+            { name: "영등포구", icon: "🏢", url: "https://www.ydp.go.kr/www/selectBbsNttList.do?key=2848&bbsNo=40&searchCnd=SJ&searchKrwd=%EB%8F%99%EC%9D%98%EC%84%9C+%EB%B2%88%ED%98%B8%EB%B6%80%EC%97%AC" }
         ].sort((a, b) => a.name.localeCompare(b.name, 'ko'));
 
-        function draw(target, list, dis = false) {
+        function draw(target, list) {
             const el = document.getElementById(target);
             list.forEach(d => {
                 const c = document.createElement('div');
-                c.className = dis ? 'card disabled' : 'card';
-                let b = dis ? `<button class="btn btn-disabled">추후 업데이트</button>` : `<button class="btn" onclick="go('${d.url}')">현황 확인</button>`;
-                c.innerHTML = `<span class="icon">${d.icon}</span><h2>${d.name}</h2>${b}`;
+                c.className = 'card';
+                const btnLabel = d.isManual ? '검색어 입력' : '현황 확인';
+                c.innerHTML = `<span class="icon">${d.icon}</span><h2>${d.name}</h2><button class="btn" onclick="window.open('${d.url}')">${btnLabel}</button>`;
                 el.appendChild(c);
             });
         }
 
-        function go(u) {
-            const f = "width=1300,height=900,resizable=yes,scrollbars=yes";
-            if (u === 'NOWON_POST') { window.open('', 'pWin', f); document.getElementById('nowonForm').submit(); }
-            else if (u === 'YONGSAN_POST') { window.open('', 'pWin', f); document.getElementById('yongsanForm').submit(); }
-            else { window.open(u, '_blank', f); }
-        }
-
         draw('northGrid', north);
-        draw('southGrid', south, true);
+        draw('southGrid', south);
+        loadSheetData();
     </script>
 </body>
 </html>
