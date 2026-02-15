@@ -34,7 +34,28 @@
         .ad-item { text-decoration: none; color: inherit; }
         .ad-content { font-size: 18px; font-weight: 700; color: var(--brand-navy); }
         @media (max-width: 1024px) { .grid { grid-template-columns: repeat(3, 1fr); } }
-        @media (max-width: 600px) { .grid { grid-template-columns: repeat(2, 1fr); gap: 15px; } .notice-tag { display: none; } }
+        @media (max-width: 600px) {
+            body { padding: 30px 14px 0 14px; }
+            header { margin-bottom: 30px; }
+            h1 { font-size: 26px; margin-bottom: 6px; }
+            .main-subtitle { font-size: 15px; }
+            .section-container { margin-bottom: 36px; }
+            .section-header { font-size: 17px; margin-bottom: 16px; }
+            .notice-board { border-radius: 16px; padding: 4px 0; }
+            .notice-item { padding: 13px 12px; flex-wrap: wrap; gap: 6px 0; }
+            .notice-tag { display: none; }
+            .badge { font-size: 10px; padding: 2px 7px; margin-right: 8px; flex-shrink: 0; }
+            .notice-title { font-size: 14px; white-space: normal; line-height: 1.45; min-width: 0; }
+            .notice-date { font-size: 12px; margin-left: auto; flex-shrink: 0; }
+            .grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+            .card { border-radius: 20px; padding: 24px 14px; min-height: 140px; }
+            .card h2 { font-size: 16px; margin: 8px 0; }
+            .icon { font-size: 28px; margin-bottom: 10px; }
+            .btn { height: 40px; font-size: 13px; border-radius: 11px; }
+            footer { border-radius: 20px; padding: 28px 16px; margin-top: 24px; }
+            .ad-container { gap: 24px; }
+            .ad-content { font-size: 15px; }
+        }
     </style>
 </head>
 <body>
