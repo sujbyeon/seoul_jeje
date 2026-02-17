@@ -15,50 +15,51 @@
         .section-container { width: 100%; max-width: 1300px; margin-bottom: 60px; }
         .section-header { font-size: 24px; font-weight: 700; margin-bottom: 30px; color: var(--brand-navy); display: flex; align-items: center; }
         .section-header::after { content: ""; flex: 1; height: 1.5px; background: linear-gradient(to right, var(--brand-gold), transparent); margin-left: 20px; opacity: 0.3; }
-        .notice-board { width: 100%; background: var(--card-bg); border-radius: 24px; padding: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); margin-bottom: 20px; border: 1px solid rgba(167, 133, 105, 0.2); overflow: hidden; }
+        
+        /* 공지 리스트 보드 */
+        .notice-board { width: 100%; background: var(--card-bg); border-radius: 24px; padding: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); border: 1px solid rgba(167, 133, 105, 0.2); overflow: hidden; box-sizing: border-box; }
         .notice-item { display: flex; align-items: center; padding: 15px; border-bottom: 1px solid #f0f0f0; text-decoration: none; color: inherit; transition: 0.2s; }
         .notice-item:last-child { border-bottom: none; }
         .notice-item:hover { background-color: #fcfaf8; }
-        .badge { background: var(--accent-red); color: white; font-size: 11px; padding: 3px 8px; border-radius: 50px; margin-right: 12px; font-weight: 700; }
+        
+        /* 검색 영역 중앙 정렬 및 여백 */
+        .search-area { width: 100%; max-width: 1300px; margin-top: 30px; display: flex; flex-direction: column; align-items: center; }
+        .search-wrapper { width: 100%; margin-bottom: 10px; }
+        .search-input { width: 100%; padding: 16px 24px; border-radius: 18px; border: 1px solid rgba(167, 133, 105, 0.3); background: var(--card-bg); font-family: inherit; font-size: 16px; box-sizing: border-box; outline: none; transition: 0.2s; box-shadow: 0 4px 15px rgba(0,0,0,0.02); text-align: center; }
+        .search-input:focus { border-color: var(--brand-gold); box-shadow: 0 4px 20px rgba(167, 133, 105, 0.1); }
+        
+        /* 안내 문구 중앙 정렬 */
+        .search-info { font-size: 14px; color: var(--brand-gold); margin-top: 5px; font-weight: 600; display: none; text-align: center; width: 100%; }
+
+        /* 배지 스타일 */
+        .badge { background: var(--accent-red); color: white; font-size: 11px; padding: 4px 10px; border-radius: 50px; margin-right: 12px; font-weight: 700; white-space: nowrap; }
+        .badge-date { background: var(--brand-navy) !important; min-width: 70px; display: inline-flex; justify-content: center; padding: 4px 0 !important; }
+        
         .notice-tag { color: var(--brand-gold); font-weight: 700; font-size: 14px; margin-right: 15px; min-width: 60px; }
         .notice-title { flex: 1; font-weight: 600; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .notice-date { color: #999; font-size: 13px; margin-left: 15px; }
+
         .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 24px; width: 100%; }
         .card { background: linear-gradient(135deg, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.6) 100%); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-radius: 28px; padding: 40px 20px; text-align: center; border: 1px solid rgba(167, 133, 105, 0.12); display: flex; flex-direction: column; justify-content: space-between; min-height: 180px; transition: 0.3s; box-shadow: 0 4px 20px rgba(0,0,0,0.03); }
         .card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(167, 133, 105, 0.12); border-color: rgba(167, 133, 105, 0.25); }
         .icon { font-size: 36px; margin-bottom: 18px; }
         .btn { cursor: pointer; width: 100%; height: 46px; background-color: var(--brand-navy); color: white; border: none; border-radius: 14px; font-weight: 600; transition: 0.2s; }
         .btn:hover { background-color: var(--brand-gold); }
+
         footer { width: 100%; max-width: 1300px; background: linear-gradient(135deg, rgba(255,255,255,0.7) 0%, rgba(236,236,237,0.5) 100%); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-radius: 30px; padding: 44px 32px; margin-top: 40px; margin-bottom: 40px; text-align: center; box-sizing: border-box; border: 1px solid rgba(167, 133, 105, 0.1); box-shadow: 0 4px 20px rgba(0,0,0,0.02); }
         .ad-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; }
         .ad-item { text-decoration: none; color: inherit; padding: 16px 28px; border-radius: 16px; transition: 0.2s; border: 1px solid transparent; }
         .ad-item:hover { background: rgba(167, 133, 105, 0.06); border-color: rgba(167, 133, 105, 0.15); }
         .ad-label { font-size: 13px; color: #888; margin-bottom: 5px; letter-spacing: 0.02em; }
         .ad-content { font-size: 17px; font-weight: 700; color: var(--brand-navy); }
-        @media (max-width: 1024px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+
         @media (max-width: 600px) {
             body { padding: 30px 14px 0 14px; }
-            header { margin-bottom: 30px; }
-            h1 { font-size: 26px; margin-bottom: 6px; }
-            .main-subtitle { font-size: 15px; }
-            .section-container { margin-bottom: 36px; }
-            .section-header { font-size: 17px; margin-bottom: 16px; }
-            .notice-board { border-radius: 16px; padding: 4px 0; }
-            .notice-item { padding: 13px 12px; flex-wrap: wrap; gap: 6px 0; }
+            h1 { font-size: 26px; }
             .notice-tag { display: none; }
-            .badge { font-size: 10px; padding: 2px 7px; margin-right: 8px; flex-shrink: 0; }
-            .notice-title { font-size: 14px; white-space: normal; line-height: 1.45; min-width: 0; }
-            .notice-date { font-size: 12px; margin-left: auto; flex-shrink: 0; }
-            .grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
-            .card { border-radius: 20px; padding: 24px 14px; min-height: 140px; }
-            .card h2 { font-size: 16px; margin: 8px 0; }
-            .icon { font-size: 28px; margin-bottom: 10px; }
-            .btn { height: 40px; font-size: 13px; border-radius: 11px; }
-            footer { border-radius: 20px; padding: 24px 12px; margin-top: 24px; margin-bottom: 24px; }
-            .ad-container { gap: 8px; }
-            .ad-item { padding: 12px 16px; border-radius: 12px; }
-            .ad-label { font-size: 12px; }
-            .ad-content { font-size: 14px; }
+            .notice-title { font-size: 14px; white-space: normal; }
+            .grid { grid-template-columns: repeat(2, 1fr); }
+            .ad-container { flex-direction: column; }
         }
     </style>
 </head>
@@ -69,9 +70,17 @@
     </header>
 
     <div class="section-container">
-        <div class="section-header">🔥 최근 번호부여 업데이트 (실시간)</div>
+        <div class="section-header">🔥 최근 번호부여 업데이트</div>
+        
         <div class="notice-board" id="sheet-notices">
             <p style="text-align:center; padding:20px; color:#999;">데이터를 가져오는 중입니다...</p>
+        </div>
+
+        <div class="search-area">
+            <div class="search-wrapper">
+                <input type="text" id="searchInput" class="search-input" placeholder="찾으시는 구 명칭이나 구역명을 입력하세요 (전체 데이터 검색)">
+            </div>
+            <div id="searchInfo" class="search-info">💡 해당 구의 이전 번호부여 이력을 검색합니다.</div>
         </div>
     </div>
 
@@ -103,90 +112,76 @@
     </footer>
 
     <script>
-        // Google Sheets gviz 엔드포인트
         const SHEET_ID = '1SUHqOamFuM-g20UbaGIzMp2mpFsWNBJ4gLse1ZfSMyI';
+        const GID_MAIN = '0';
+        const GID_LIST = '414991837';
 
-        function renderNotices(data) {
-            const container = document.getElementById('sheet-notices');
-            const rows = data.table.rows;
+        let mainData = [];
+        let searchData = [];
 
-            if (!rows || rows.length === 0) {
-                container.innerHTML = '<p style="padding:20px; text-align:center; color:#999;">등록된 데이터가 없습니다.</p>';
-                return;
-            }
-
-            container.innerHTML = '';
+        function createNoticeHTML(rows, isSearch = false) {
+            if (!rows || rows.length === 0) return '<p style="padding:20px; text-align:center; color:#999;">결과가 없습니다.</p>';
+            let html = '';
             rows.forEach(row => {
                 const c = row.c;
-                if (!c || c.length < 4) return;
-
-                const badge = c[0] ? c[0].v : 'NEW';
-                const tag   = c[1] ? c[1].v : '서울';
-                const title = c[2] ? c[2].v : '제목 없음';
+                if (!c || !c[2] || c[2].v === "제목") return;
+                const tag   = c[1] ? c[1].v : '';
+                const title = c[2] ? c[2].v : '';
                 const link  = c[3] ? c[3].v : '#';
                 const date  = c[4] ? (c[4].f || c[4].v) : '';
 
-                if (!title || link === '#') return;
-
-                container.innerHTML += `
-                    <a href="${link}" target="_blank" class="notice-item">
-                        <span class="badge">${badge}</span>
-                        <span class="notice-tag">${tag}</span>
-                        <span class="notice-title">${title}</span>
-                        <span class="notice-date">${date}</span>
-                    </a>`;
-            });
-        }
-
-        function loadSheetData() {
-            const container = document.getElementById('sheet-notices');
-            const gvizUrl = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=0`;
-
-            // 방법 1: fetch 시도
-            fetch(gvizUrl)
-                .then(res => {
-                    if (!res.ok) throw new Error('HTTP ' + res.status);
-                    return res.text();
-                })
-                .then(text => {
-                    const match = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]+?)\);?\s*$/);
-                    if (!match) throw new Error('응답 형식 오류');
-                    renderNotices(JSON.parse(match[1]));
-                })
-                .catch(err => {
-                    console.warn('[fetch 실패, JSONP로 재시도]', err.message);
-                    loadViaJSONP();
-                });
-        }
-
-        // 방법 2: JSONP (script 태그) - CORS 완전 우회
-        function loadViaJSONP() {
-            const container = document.getElementById('sheet-notices');
-            const callbackName = 'sheetCallback_' + Date.now();
-
-            window[callbackName] = function(data) {
-                try {
-                    renderNotices(data);
-                } catch (e) {
-                    console.error('[JSONP 파싱 에러]', e);
-                    container.innerHTML = '<p style="padding:20px; text-align:center;">데이터를 불러오는 중입니다. 잠시만 기다려주세요.</p>';
-                    setTimeout(loadSheetData, 2000);
+                let badgeHTML = '';
+                if (isSearch) {
+                    badgeHTML = `<span class="badge badge-date">${date}</span>`;
+                } else {
+                    const badgeText = c[0] ? c[0].v : 'NEW';
+                    badgeHTML = `<span class="badge">${badgeText}</span>`;
                 }
-                delete window[callbackName];
-                document.getElementById('jsonp-script')?.remove();
-            };
 
+                html += `<a href="${link}" target="_blank" class="notice-item">
+                            ${badgeHTML}
+                            ${tag ? `<span class="notice-tag">${tag}</span>` : ''}
+                            <span class="notice-title">${title}</span>
+                            <span class="notice-date">${isSearch ? '' : date}</span>
+                         </a>`;
+            });
+            return html;
+        }
+
+        function loadData(gid, callbackName) {
             const script = document.createElement('script');
-            script.id = 'jsonp-script';
-            script.src = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=responseHandler:${callbackName}&gid=0`;
-            script.onerror = function() {
-                console.error('[JSONP 로딩 실패]');
-                container.innerHTML = '<p style="padding:20px; text-align:center;">데이터를 불러오는 중입니다. 잠시만 기다려주세요.</p>';
-                delete window[callbackName];
-                setTimeout(loadSheetData, 2000);
-            };
+            script.src = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=responseHandler:${callbackName}&gid=${gid}`;
             document.body.appendChild(script);
         }
+
+        window.handleMainData = function(response) {
+            mainData = response.table.rows;
+            document.getElementById('sheet-notices').innerHTML = createNoticeHTML(mainData, false);
+        };
+
+        window.handleListData = function(response) {
+            searchData = response.table.rows;
+        };
+
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const keyword = e.target.value.toLowerCase().trim();
+            const container = document.getElementById('sheet-notices');
+            const info = document.getElementById('searchInfo');
+            
+            if (keyword === "") {
+                container.innerHTML = createNoticeHTML(mainData, false);
+                info.style.display = 'none';
+                return;
+            }
+            
+            info.style.display = 'block';
+            const filtered = searchData.filter(row => {
+                const tag = row.c[1] ? String(row.c[1].v).toLowerCase() : "";
+                const title = row.c[2] ? String(row.c[2].v).toLowerCase() : "";
+                return tag.includes(keyword) || title.includes(keyword);
+            });
+            container.innerHTML = createNoticeHTML(filtered, true);
+        });
 
         const north = [
             { name: "강북구", icon: "🏛️", url: "https://www.gangbuk.go.kr/portal/bbs/B0000035/list.do?menuNo=200607" },
@@ -203,7 +198,7 @@
             { name: "종로구", icon: "🏯", url: "https://www.jongno.go.kr/cmm/search/searchEngine.do", isManual: true },
             { name: "중구", icon: "🏙️", url: "https://www.junggu.seoul.kr/content.do?cmsid=14231", isManual: true },
             { name: "중랑구", icon: "🌹", url: "https://www.jungnang.go.kr/dong/bbs/list/B0000002.do?menuNo=500012&dong=01" }
-        ].sort((a, b) => a.name.localeCompare(b.name, 'ko'));
+        ].sort((a,b)=>a.name.localeCompare(b.name,'ko'));
 
         const south = [
             { name: "강남구", icon: "🏙️", url: "https://www.gangnam.go.kr/board/union6/list.do?keyfield=bdm_main_title&keyword=%EB%8F%99%EC%9D%98%EC%84%9C" },
@@ -217,7 +212,7 @@
             { name: "송파구", icon: "🏰", url: "https://www.songpa.go.kr/search/search_page.jsp", isManual: true },
             { name: "양천구", icon: "🌳", url: "https://www.yangcheon.go.kr/site/search/main.jsp", isManual: true },
             { name: "영등포구", icon: "🏢", url: "https://www.ydp.go.kr/www/selectBbsNttList.do?key=2848&bbsNo=40&searchCnd=SJ&searchKrwd=%EB%8F%99%EC%9D%98%EC%84%9C+%EB%B2%88%ED%98%B8%EB%B6%80%EC%97%AC" }
-        ].sort((a, b) => a.name.localeCompare(b.name, 'ko'));
+        ].sort((a,b)=>a.name.localeCompare(b.name,'ko'));
 
         function draw(target, list) {
             const el = document.getElementById(target);
@@ -232,7 +227,9 @@
 
         draw('northGrid', north);
         draw('southGrid', south);
-        loadSheetData();
+
+        loadData(GID_MAIN, 'handleMainData');
+        loadData(GID_LIST, 'handleListData');
     </script>
 </body>
 </html>
