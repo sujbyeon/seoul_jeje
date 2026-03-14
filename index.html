@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>서울 재개발 초기구역 대시보드</title>
+    <title>서울 재개발 초기구역(연변동의서 현황)</title>
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
     <style>
         :root { --brand-gold: #A78569; --brand-navy: #022136; --apple-bg: #f5f5f7; --card-bg: #ffffff; --ad-bg: #ececed; --accent-red: #d93025; }
@@ -15,26 +15,22 @@
         .section-container { width: 100%; max-width: 1300px; margin-bottom: 60px; }
         .section-header { font-size: 24px; font-weight: 700; margin-bottom: 30px; color: var(--brand-navy); display: flex; align-items: center; }
         .section-header::after { content: ""; flex: 1; height: 1.5px; background: linear-gradient(to right, var(--brand-gold), transparent); margin-left: 20px; opacity: 0.3; }
-        
-        /* 공지 리스트 보드 */
+
         .notice-board { width: 100%; background: var(--card-bg); border-radius: 24px; padding: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); border: 1px solid rgba(167, 133, 105, 0.2); overflow: hidden; box-sizing: border-box; }
-        .notice-item { display: flex; align-items: center; padding: 15px; border-bottom: 1px solid #f0f0f0; text-decoration: none; color: inherit; transition: 0.2s; }
+        .notice-item { display: flex; align-items: center; padding: 15px; border-bottom: 1px solid #f0f0f0; text-decoration: none; color: inherit; transition: 0.2s; cursor: pointer; }
         .notice-item:last-child { border-bottom: none; }
         .notice-item:hover { background-color: #fcfaf8; }
-        
-        /* 검색 영역 중앙 정렬 및 여백 */
+
         .search-area { width: 100%; max-width: 1300px; margin-top: 30px; display: flex; flex-direction: column; align-items: center; }
         .search-wrapper { width: 100%; margin-bottom: 10px; }
         .search-input { width: 100%; padding: 16px 24px; border-radius: 18px; border: 1px solid rgba(167, 133, 105, 0.3); background: var(--card-bg); font-family: inherit; font-size: 16px; box-sizing: border-box; outline: none; transition: 0.2s; box-shadow: 0 4px 15px rgba(0,0,0,0.02); text-align: center; }
         .search-input:focus { border-color: var(--brand-gold); box-shadow: 0 4px 20px rgba(167, 133, 105, 0.1); }
-        
-        /* 안내 문구 중앙 정렬 */
+
         .search-info { font-size: 14px; color: var(--brand-gold); margin-top: 5px; font-weight: 600; display: none; text-align: center; width: 100%; }
 
-        /* 배지 스타일 */
         .badge { background: var(--accent-red); color: white; font-size: 11px; padding: 4px 10px; border-radius: 50px; margin-right: 12px; font-weight: 700; white-space: nowrap; }
         .badge-date { background: var(--brand-navy) !important; min-width: 70px; display: inline-flex; justify-content: center; padding: 4px 0 !important; }
-        
+
         .notice-tag { color: var(--brand-gold); font-weight: 700; font-size: 14px; margin-right: 15px; min-width: 60px; }
         .notice-title { flex: 1; font-weight: 600; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .notice-date { color: #999; font-size: 13px; margin-left: 15px; }
@@ -71,11 +67,9 @@
 
     <div class="section-container">
         <div class="section-header">🔥 최근 번호부여 업데이트</div>
-        
         <div class="notice-board" id="sheet-notices">
             <p style="text-align:center; padding:20px; color:#999;">데이터를 가져오는 중입니다...</p>
         </div>
-
         <div class="search-area">
             <div class="search-wrapper">
                 <input type="text" id="searchInput" class="search-input" placeholder="찾으시는 구 명칭이나 구역명을 입력하세요 (전체 데이터 검색)">
@@ -112,125 +106,108 @@
     </footer>
 
     <script>
-        const SHEET_ID = '1SUHqOamFuM-g20UbaGIzMp2mpFsWNBJ4gLse1ZfSMyI';
-        const GID_MAIN = '0';
-        const GID_LIST = '414991837';
+        const API_URL = 'https://script.google.com/macros/s/AKfycbyOBmKdfLu9Td2xblqvFkxUWdxDdGEvWe1-yDJkDnHYyFyYp3-Eyy6huJ98Lqg8cnAH2Q/exec';
 
         let mainData = [];
         let searchData = [];
 
+        // 날짜 포맷 변환
+        function formatDate(raw) {
+            if (!raw) return '';
+            const d = new Date(raw);
+            if (isNaN(d)) return raw; // 이미 텍스트 형식이면 그대로
+            const yyyy = d.getFullYear();
+            const mm = String(d.getMonth() + 1).padStart(2, '0');
+            const dd = String(d.getDate()).padStart(2, '0');
+            return `${yyyy}-${mm}-${dd}`;
+        }
+
+        // 공지 HTML 생성
         function createNoticeHTML(rows, isSearch = false) {
             if (!rows || rows.length === 0) return '<p style="padding:20px; text-align:center; color:#999;">결과가 없습니다.</p>';
             let html = '';
             rows.forEach(row => {
-                const c = row.c;
-                if (!c || !c[2] || c[2].v === "제목") return;
-                const tag   = c[1] ? c[1].v : '';
-                const title = c[2] ? c[2].v : '';
-                const link  = c[3] ? c[3].v : '#';
-                const date  = c[4] ? (c[4].f || c[4].v) : '';
+                if (!row.title || row.title === '제목') return;
+                const tag   = row.tag   || '';
+                const title = row.title || '';
+                const link  = row.link  || '#';
+                const date  = formatDate(row.date);
+                const badge = row.badge || 'NEW';
 
-                let badgeHTML = '';
-                if (isSearch) {
-                    badgeHTML = `<span class="badge badge-date">${date}</span>`;
-                } else {
-                    const badgeText = c[0] ? c[0].v : 'NEW';
-                    badgeHTML = `<span class="badge">${badgeText}</span>`;
-                }
+                let badgeHTML = isSearch
+                    ? `<span class="badge badge-date">${date}</span>`
+                    : `<span class="badge">${badge}</span>`;
 
-                html += `<a href="${link}" target="_blank" class="notice-item">
+                html += `<div class="notice-item" onclick="window.open('${link}', '_blank')">
                             ${badgeHTML}
                             ${tag ? `<span class="notice-tag">${tag}</span>` : ''}
                             <span class="notice-title">${title}</span>
                             <span class="notice-date">${isSearch ? '' : date}</span>
-                         </a>`;
+                         </div>`;
             });
-            return html;
+            return html || '<p style="padding:20px; text-align:center; color:#999;">결과가 없습니다.</p>';
         }
 
-        function loadData(gid, callbackName) {
-            const script = document.createElement('script');
-            script.src = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=responseHandler:${callbackName}&gid=${gid}`;
-            document.body.appendChild(script);
+        // API에서 데이터 로드
+        async function loadFromAPI() {
+            try {
+                const res = await fetch(API_URL);
+                const json = await res.json();
+
+                // 공고 데이터 (최신 5개만 메인에 표시)
+                const rows = (json.notices || []).filter(r => r.title && r.title !== '제목');
+                searchData = rows;
+                mainData = rows.slice(0, 5);
+                document.getElementById('sheet-notices').innerHTML = createNoticeHTML(mainData, false);
+
+                // 구청 카드 데이터
+                const districts = json.districts || [];
+                const north = districts.filter(d => d.region === 'north').sort((a,b) => a.name.localeCompare(b.name, 'ko'));
+                const south = districts.filter(d => d.region === 'south').sort((a,b) => a.name.localeCompare(b.name, 'ko'));
+                drawGrid('northGrid', north);
+                drawGrid('southGrid', south);
+
+            } catch(e) {
+                document.getElementById('sheet-notices').innerHTML = '<p style="padding:20px; text-align:center; color:#999;">데이터를 불러오지 못했습니다.</p>';
+            }
         }
 
-        window.handleMainData = function(response) {
-            mainData = response.table.rows;
-            document.getElementById('sheet-notices').innerHTML = createNoticeHTML(mainData, false);
-        };
+        // 구청 카드 그리기
+        function drawGrid(targetId, list) {
+            const el = document.getElementById(targetId);
+            el.innerHTML = '';
+            list.forEach(d => {
+                const c = document.createElement('div');
+                c.className = 'card';
+                const btnLabel = d.isManual ? '검색어 입력' : '현황 확인';
+                c.innerHTML = `<span class="icon">${d.icon}</span><h2>${d.name}</h2><button class="btn">${btnLabel}</button>`;
+                c.querySelector('.btn').addEventListener('click', () => window.open(d.url, '_blank'));
+                el.appendChild(c);
+            });
+        }
 
-        window.handleListData = function(response) {
-            searchData = response.table.rows;
-        };
-
+        // 검색
         document.getElementById('searchInput').addEventListener('input', function(e) {
             const keyword = e.target.value.toLowerCase().trim();
             const container = document.getElementById('sheet-notices');
             const info = document.getElementById('searchInfo');
-            
-            if (keyword === "") {
+
+            if (keyword === '') {
                 container.innerHTML = createNoticeHTML(mainData, false);
                 info.style.display = 'none';
                 return;
             }
-            
+
             info.style.display = 'block';
             const filtered = searchData.filter(row => {
-                const tag = row.c[1] ? String(row.c[1].v).toLowerCase() : "";
-                const title = row.c[2] ? String(row.c[2].v).toLowerCase() : "";
+                const tag   = String(row.tag   || '').toLowerCase();
+                const title = String(row.title || '').toLowerCase();
                 return tag.includes(keyword) || title.includes(keyword);
             });
             container.innerHTML = createNoticeHTML(filtered, true);
         });
 
-        const north = [
-            { name: "강북구", icon: "🏛️", url: "https://www.gangbuk.go.kr/portal/bbs/B0000035/list.do?menuNo=200607" },
-            { name: "광진구", icon: "🏘️", url: "https://www.gwangjin.go.kr/portal/bbs/B0000001/list.do?pageIndex=1&menuNo=200190&searchCnd=1&searchWrd=%EB%8F%99%EC%9D%98%EC%84%9C+%EB%B2%88%ED%98%B8%EB%B6%80%EC%97%AC" },
-            { name: "노원구", icon: "🌳", url: "https://www.nowon.kr/www/user/bbs/BD_selectBbsList.do?q_bbsCode=1004&q_searchKeyTy=sj___1002&q_searchVal=%EB%8F%99%EC%9D%98%EC%84%9C+%EB%B2%88%ED%98%B8%EB%B6%80%EC%97%AC" },
-            { name: "도봉구", icon: "🏔️", url: "https://www.dobong.go.kr/WDB_common/search_new/search.asp?category=BBS&kwd=%EB%8F%99%EC%9D%98%EC%84%9C+%EB%B2%88%ED%98%B8%EB%B6%80%EC%97%AC+%EC%9A%94%EC%B2%AD" },
-            { name: "동대문구", icon: "🍎", url: "https://www.ddm.go.kr/www/selectBbsNttList.do?key=198&bbsNo=38&searchCnd=SJ&searchKrwd=%EB%8F%99%EC%9D%98%EC%84%9C+%EB%B2%88%ED%98%B8%EB%B6%80%EC%97%AC" },
-            { name: "마포구", icon: "🌉", url: "https://www.mapo.go.kr/site/main/board/notice/list?sv=%EB%8F%99%EC%9D%98%EC%84%9C+%EB%B2%88%ED%98%B8%EB%B6%80%EC%97%AC" },
-            { name: "서대문구", icon: "🏫", url: "https://www.sdm.go.kr/city/redev/business.do" },
-            { name: "성동구", icon: "💎", url: "https://www.sd.go.kr/main/selectBbsNttList.do?key=1307&bbsNo=166&integrDeptCode=&searchCtgry=&searchCnd=SJ&searchKrwd=%EB%8F%99%EC%9D%98%EC%84%9C" },
-            { name: "성북구", icon: "📚", url: "https://www.sb.go.kr/www/selectBbsNttList.do?key=6350&bbsNo=41&searchCnd=SJ&searchKrwd=%EB%8F%99%EC%9D%98%EC%84%9C+%EB%B2%88%ED%98%B8%EB%B6%80%EC%97%AC" },
-            { name: "용산구", icon: "🚉", url: "https://www.yongsan.go.kr/portal/bbs/B0000170/list.do?menuNo=200848&searchCnd=1&searchWrd=%EB%8F%99%EC%9D%98%EC%84%9C" },
-            { name: "은평구", icon: "🌋", url: "https://www.ep.go.kr/www/selectBbsNttList.do?key=1063&bbsNo=63&searchCnd=SJ&searchKrwd=%EB%8F%99%EC%9D%98%EC%84%9C+%EB%B2%88%ED%98%B8%EB%B6%80%EC%97%AC" },
-            { name: "종로구", icon: "🏯", url: "https://www.jongno.go.kr/cmm/search/searchEngine.do", isManual: true },
-            { name: "중구", icon: "🏙️", url: "https://www.junggu.seoul.kr/content.do?cmsid=14231", isManual: true },
-            { name: "중랑구", icon: "🌹", url: "https://www.jungnang.go.kr/dong/bbs/list/B0000002.do?menuNo=500012&dong=01" }
-        ].sort((a,b)=>a.name.localeCompare(b.name,'ko'));
-
-        const south = [
-            { name: "강남구", icon: "🏙️", url: "https://www.gangnam.go.kr/board/union6/list.do?keyfield=bdm_main_title&keyword=%EB%8F%99%EC%9D%98%EC%84%9C" },
-            { name: "강동구", icon: "☀️", url: "https://www.gangdong.go.kr/web/newportal/bbs/b_111/list?sv=%EB%8F%99%EC%9D%98%EC%84%9C" },
-            { name: "강서구", icon: "✈️", url: "https://www.gangseo.seoul.kr/gs040101", isManual: true },
-            { name: "관악구", icon: "⛰️", url: "https://www.gwanak.go.kr/site/gwanak/ex/bbsNew/List.do?typeCode=1", isManual: true },
-            { name: "구로구", icon: "⚙️", url: "https://www.guro.go.kr/www/selectBbsNttList.do?key=1790&bbsNo=662&searchCnd=SJ&searchKrwd=%EB%8F%99%EC%9D%98%EC%84%9C+%EB%B2%88%ED%98%B8%EB%B6%80%EC%97%AC" },
-            { name: "금천구", icon: "👔", url: "https://www.geumcheon.go.kr/portal/selectBbsNttList.do?key=4299&bbsNo=150604&searchCnd=SJ&searchKrwd=%EB%8F%99%EC%9D%98%EC%84%9C+%EB%B2%88%ED%98%B8%EB%B6%80%EC%97%AC" },
-            { name: "동작구", icon: "🎓", url: "https://www.dongjak.go.kr/search.do", isManual: true },
-            { name: "서초구", icon: "⚖️", url: "https://www.seocho.go.kr/site/seocho/ex/bbs/List.do?cbIdx=57" },
-            { name: "송파구", icon: "🏰", url: "https://www.songpa.go.kr/search/search_page.jsp", isManual: true },
-            { name: "양천구", icon: "🌳", url: "https://www.yangcheon.go.kr/site/search/main.jsp", isManual: true },
-            { name: "영등포구", icon: "🏢", url: "https://www.ydp.go.kr/www/selectBbsNttList.do?key=2848&bbsNo=40&searchCnd=SJ&searchKrwd=%EB%8F%99%EC%9D%98%EC%84%9C+%EB%B2%88%ED%98%B8%EB%B6%80%EC%97%AC" }
-        ].sort((a,b)=>a.name.localeCompare(b.name,'ko'));
-
-        function draw(target, list) {
-            const el = document.getElementById(target);
-            list.forEach(d => {
-                const c = document.createElement('div');
-                c.className = 'card';
-                const btnLabel = d.isManual ? '검색어 입력' : '현황 확인';
-                c.innerHTML = `<span class="icon">${d.icon}</span><h2>${d.name}</h2><button class="btn" onclick="window.open('${d.url}')">${btnLabel}</button>`;
-                el.appendChild(c);
-            });
-        }
-
-        draw('northGrid', north);
-        draw('southGrid', south);
-
-        loadData(GID_MAIN, 'handleMainData');
-        loadData(GID_LIST, 'handleListData');
+        loadFromAPI();
     </script>
 </body>
 </html>
-
